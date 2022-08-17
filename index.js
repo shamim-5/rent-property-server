@@ -21,8 +21,15 @@ async function run() {
   try {
     const servicesCollection = client.db("rent_property").collection("services");
 
-    app.get("/service", async (req, res) => {
+    app.get("/", async (req, res) => {
       const result = await servicesCollection.find().toArray();
+      console.log(result);
+      res.send(result);
+    });
+
+    app.post("/service", async (req, res) => {
+      const service = req.body;
+      const result = await servicesCollection.insertOne(service);
       res.send(result);
     });
   } finally {
@@ -30,10 +37,6 @@ async function run() {
   }
 }
 run().catch(console.dir);
-
-app.get("/", (req, res) => {
-  res.send("Hello World!");
-});
 
 app.listen(port, () => {
   console.log(`App listening on port ${port}`);
